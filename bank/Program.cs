@@ -18,6 +18,29 @@
             }
             catch(InvalidOperationException e)
             { Console.WriteLine(e.Message);}
+            LineOfCreditAccount lineOfCredit = new LineOfCreditAccount("Yana", 0m, 1000m);
+            lineOfCredit.MakeWithdrawal(500m, DateTime.UtcNow, "credit");
+            GiftCardAccount giftCard = new GiftCardAccount("Yana", 1000, 5000);
+
+
+
+            InterestEarningAccount interest = new InterestEarningAccount("Вовчик", 1000);
+
+            interest.PerformMonthAndTransactions();
+            Console.WriteLine(interest.GetAccountHistory());
+            List<BankAccount> account = new List<BankAccount>();
+            account.Add(account1);
+            account.Add(interest);
+            account.Add(lineOfCredit);
+            account.Add(giftCard);
+            foreach (var acount in account)
+            {
+                Console.WriteLine(acount);
+                acount.PerformMonthAndTransactions();
+                Console.WriteLine(acount.GetAccountHistory());
+            }
+            lineOfCredit.MakeWithdrawal(600m, DateTime.UtcNow, "credit");
+            Console.WriteLine(lineOfCredit.GetAccountHistory());
         }
     }
 }
