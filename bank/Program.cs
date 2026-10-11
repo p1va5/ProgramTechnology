@@ -41,6 +41,7 @@
             }
             lineOfCredit.MakeWithdrawal(600m, DateTime.UtcNow, "credit");
             Console.WriteLine(lineOfCredit.GetAccountHistory());
+            TransferBetweenAccounts.Transfer(account1, account2,50m);
             Console.WriteLine(AuditLogs.GetAuditLogs());
         }
     }
