@@ -3,6 +3,10 @@
 namespace bank;
 // потомок класса object
 
+/// <summary>
+/// Представляет банковский счёт клиента с возможностью внесения депозитов,
+/// снятия средств, отслеживания истории транзакций и выполнения ежемесячных операций.
+/// </summary>
 public class BankAccount
 {
     private readonly decimal _minBalance;
@@ -30,13 +34,17 @@ public class BankAccount
             return balace;
         }
     }
+    /// <summary>
+    /// Возвращает статус клиента.
+    /// </summary>
+    public ClientStatus Status { get; set; } = ClientStatus.Regular;
     private static int s_accountNumberSeed = 10000000;
     /// <summary>
     /// Инициализирует новый экземпляр класса <see cref="BankAccount"/> с нулевым минимальным балансом.
     /// </summary>
     /// <param name="name">Имя владельца счета.</param>
     /// <param name="initialBalance">Начальный баланс счета.</param>
-    public BankAccount(string name, decimal initialBalance):this(name, initialBalance, 0)
+    public BankAccount(string name, decimal initialBalance):this(name, initialBalance, 0, ClientStatus.Regular)
     {
 
     }
@@ -46,16 +54,15 @@ public class BankAccount
     /// <param name="name">Имя владельца счета.</param>
     /// <param name="initialBalance">Начальный баланс счета.</param>
     /// <param name="minBalance">Минимально допустимый баланс счета.</param>
-    public BankAccount(string name, decimal initialBalance, decimal minBalance)
+    /// <param name="status">Статус клиента.</param>
+    public BankAccount(string name, decimal initialBalance, decimal minBalance, ClientStatus status)
     {
         Owner = name;
         Number = s_accountNumberSeed.ToString();
         s_accountNumberSeed++;
         _minBalance = minBalance;
-        if (initialBalance > 0)
-        {
-            MakeDeposite(initialBalance, DateTime.UtcNow, "initial balance"); //this .Balance = initialBalance;
-        }
+        Status = status;
+        if (initialBalance > 0) MakeDeposite(initialBalance, DateTime.UtcNow, "initial balance"); //this .Balance = initialBalance;
     }
     /// <summary>
     /// Вносит депозит на счет.
@@ -63,8 +70,9 @@ public class BankAccount
     /// <param name="amount">Сумма депозита. Должна быть больше нуля.</param>
     /// <param name="date">Дата и время проведения транзакции.</param>
     /// <param name="note">Примечание или описание транзакции.</param>
+    /// <param name="type">Тип тразакции.</param>
     /// <exception cref="ArgumentOutOfRangeException">Вызывается, если сумма депозита меньше или равна нулю.</exception>
-    public void MakeDeposite(decimal amount, DateTime date, string note)
+    public void MakeDeposite(decimal amount, DateTime date, string note, string type = "Deposite")
     {
         if (amount <= 0)
         {
@@ -72,6 +80,8 @@ public class BankAccount
         }
         var deposite = new Transaction(amount, date, note);
         _allTransaction.Add(deposite);
+        AuditLogs.Add(Number, type, amount, date);
+
     }
     /// <summary>
     /// Снимает денежные средства со счета.
@@ -79,15 +89,18 @@ public class BankAccount
     /// <param name="amount">Сумма снятия. Должна быть больше нуля.</param>
     /// <param name="date">Дата и время проведения транзакции.</param>
     /// <param name="note">Примечание или описание транзакции.</param>
+    /// <param name="type">Тип тразакции.</param>
     /// <exception cref="ArgumentOutOfRangeException">Вызывается, если сумма меньше или равна нулю.</exception>
     /// <exception cref="InvalidOperationException">Вызывается через <see cref="CheckWithdrawalLmit"/>, если баланс падает ниже минимального.</exception>
-    public void MakeWithdrawal(decimal amount, DateTime date, string note)
+    public void MakeWithdrawal(decimal amount, DateTime date, string note, string type = "Withdrawal")
     {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
         Transaction? overdraftTrasction = CheckWithdrawalLmit(Balance - amount < _minBalance);
         Transaction? withdrawal = new(-amount, date, note);
         _allTransaction.Add(withdrawal);
-        if(overdraftTrasction is not null) _allTransaction.Add(overdraftTrasction);
+        AuditLogs.Add(Number, type, amount, date);
+        if (overdraftTrasction is not null) _allTransaction.Add(overdraftTrasction);
+        if (Status == ClientStatus.VIP) MakeDeposite(amount * 0.05m, date, "Cashback");
     }
     //protected модификатор доступа который означает что его можно вызвать текущего и из дочернего класса клиент не может его вызвать 
     /// <summary>
@@ -113,7 +126,7 @@ public class BankAccount
     {
         var report = new StringBuilder();
         decimal balance = 0;
-        report.Append("Data\t\tAmount\tBalance\tNote");
+        report.Append("Data\t\tAmount\tBalance\tNote\n");
         foreach (var item in _allTransaction)
         {
             balance += item.Amount;
@@ -128,7 +141,26 @@ public class BankAccount
     /// </summary>
     public virtual void PerformMonthAndTransactions()
     {
-
+        switch(Status)
+        {
+            case ClientStatus.Regular:
+                MakeWithdrawal(50, DateTime.UtcNow, "Service fee");
+                break;
+            case ClientStatus.Premium:
+                if(Balance>10000)
+                {
+                    decimal iterest = 0.01m * (Balance - 10000);
+                    MakeDeposite(iterest, DateTime.UtcNow, "Monthly interest", "Interest");
+                }
+                break;
+            case ClientStatus.VIP:
+                if (Balance > 10000)
+                {
+                    decimal iterest = 0.03m * (Balance - 10000);
+                    MakeDeposite(iterest, DateTime.UtcNow, "Monthly interest", "Interest");
+                }
+                break;
+        }
     }
     // преропеделяем метод базового класса object tostring возращает строку и нформацию о обекте
     /// <summary>

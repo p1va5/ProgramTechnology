@@ -14,7 +14,8 @@ public class LineOfCreditAccount:BankAccount
     /// <param name="name">Имя владельца счета.</param>
     /// <param name="initialBalance">Начальный баланс счета.</param>
     /// <param name="creditLimit">Размер кредитного лимита (положительное число, которое передается в базовый конструктор как отрицательный минимальный баланс).</param>
-    public LineOfCreditAccount(string name, decimal initialBalance, decimal creditLimit):base(name, initialBalance, -creditLimit)
+    /// <param name="status">Статус клиента.</param>
+    public LineOfCreditAccount(string name, decimal initialBalance, decimal creditLimit, ClientStatus status = ClientStatus.Regular) :base(name, initialBalance, -creditLimit, status)
     {
 
     }
