@@ -11,7 +11,7 @@
             new SignatureCocktail(3, "Alyosha", 200, "Alyosha")
             };
             foreach (var cocktail in cocktails)
-            {
+            { 
                 Console.WriteLine(cocktail.ToString());
                 cocktail.Prepare();
                 if (cocktail is IMixable mixable) mixable.Mix("lime");
