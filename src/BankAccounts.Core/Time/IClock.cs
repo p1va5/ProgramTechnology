@@ -1,0 +1,7 @@
+﻿namespace BankAccounts.Core.Time;
+//Выносим зависимость от вермени в интерфейс
+//чтобы можно было подменить его в тестах(DIP)
+public interface IClock
+{
+    DateTime Now { get; }
+}
