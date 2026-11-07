@@ -1,4 +1,4 @@
-﻿namespace GuessNumber;
+﻿namespace GuessNumber.Logics;
 
 public interface ILogic
 {

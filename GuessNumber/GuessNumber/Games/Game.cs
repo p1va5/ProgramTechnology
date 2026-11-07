@@ -1,4 +1,7 @@
-﻿namespace GuessNumber;
+﻿using GuessNumber.Logics;
+using GuessNumber.Secret;
+
+namespace GuessNumber.Games;
 
 internal class Game : IGame
 {

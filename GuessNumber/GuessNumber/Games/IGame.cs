@@ -1,4 +1,4 @@
-﻿namespace GuessNumber;
+﻿namespace GuessNumber.Games;
 
 public interface IGame
 {

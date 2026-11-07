@@ -1,4 +1,4 @@
-﻿namespace GuessNumber;
+﻿namespace GuessNumber.Secret;
 public class RandomNubmer : ISecretNum
 {
     private readonly Random _random = new Random();
