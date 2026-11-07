@@ -1,4 +1,5 @@
 ﻿using GuessNumber.Games;
+using GuessNumber.Input;
 using GuessNumber.Logics;
 using GuessNumber.Secret;
 using GuessNumber.Statistics;
@@ -9,10 +10,11 @@ namespace GuessNumber
     {
         static void Main(string[] args)
         {
-            ILogic logic = new GameLogic();
+            IInput input = new InputConsole();
+            ILogic logic = new GameLogic(input);
             ISecretNum secret = new RandomNubmer();
             IStatistic statistic = new ConsoleStatistic();
-            IGame game = new Game(secret, logic, statistic);
+            IGame game = new Game(secret, logic, statistic, input);
             game.Play();
         }
     }

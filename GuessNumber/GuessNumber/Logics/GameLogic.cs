@@ -1,12 +1,17 @@
-﻿namespace GuessNumber.Logics;
+﻿using GuessNumber.Input;
+
+namespace GuessNumber.Logics;
 
 public class GameLogic : ILogic
 {
+    private readonly IInput _input;
+    public GameLogic(IInput input)
+    {
+        _input = input;
+    }
     public bool Round(int secret)
     {
-        Console.WriteLine("Введите число [1,100]");
-        Console.WriteLine(secret);
-        int input = Convert.ToInt32(Console.ReadLine());
+        int input = _input.InputNumber(1, 100);
         if (secret < input)
         {
             Console.WriteLine("Меньше");
