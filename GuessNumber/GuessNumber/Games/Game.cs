@@ -1,5 +1,6 @@
 ﻿using GuessNumber.Input;
 using GuessNumber.Logics;
+using GuessNumber.Output;
 using GuessNumber.Secret;
 using GuessNumber.Statistics;
 
@@ -11,12 +12,14 @@ internal class Game : IGame
     private readonly ILogic _logic;
     private readonly IStatistic _statistic;
     private readonly IInput _input;
-    public Game(ISecretNum secret, ILogic logic, IStatistic statistic, IInput input)
+    private readonly IOutput _output;
+    public Game(ISecretNum secret, ILogic logic, IStatistic statistic, IInput input, IOutput output)
     {
         _secret = secret;
         _logic= logic;
         _statistic = statistic;
         _input = input;
+        _output = output;
     }
 
     public void Play()
