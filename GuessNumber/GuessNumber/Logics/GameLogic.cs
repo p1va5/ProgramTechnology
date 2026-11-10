@@ -6,12 +6,14 @@ namespace GuessNumber.Logics;
 public class GameLogic : ILogic
 {
     private readonly IInput _input;
-    private readonly IOutput _output;
-    public GameLogic(IInput input, IOutput output)
+    public event EventHandler<RoundEvents>? RoundFinished;
+    public event EventHandler<WinEvents>? GameWin;
+
+    public GameLogic(IInput input)
     {
         _input = input;
-        _output = output;
     }
+
     public ResultRound Round(int secret)
     {
         int input = _input.InputNumber(1, 100);
@@ -19,16 +21,25 @@ public class GameLogic : ILogic
         if (secret > input) return ResultRound.Higher;
         return ResultRound.Correct;
     }
+
     public int CounterRound(int secret)
     {
-        int CountRound = 0;
+        int countRound = 0;
         ResultRound result;
+
         while (true)
         {
-            CountRound++;
+            countRound++;
             result = Round(secret);
-            if (result == ResultRound.Correct) return CountRound;
-            _output.GetResult(result);
+
+            RoundFinished?.Invoke(this, new RoundEvents(secret, result, countRound));
+
+
+            if (result == ResultRound.Correct)
+            {
+                GameWin?.Invoke(this, new WinEvents(secret, countRound));
+                return countRound;
+            }
         }
     }
 }

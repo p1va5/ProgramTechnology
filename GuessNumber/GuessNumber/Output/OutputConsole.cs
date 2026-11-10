@@ -1,10 +1,12 @@
-﻿namespace GuessNumber.Output;
+﻿using GuessNumber.Logics;
+
+namespace GuessNumber.Output;
 
 public class OutputConsole : IOutput
 {
-    public void GetResult(ResultRound result)
+    public void GetResult(object? sender, RoundEvents e)
     {
-        if (result == ResultRound.Higher) Console.WriteLine("Больше");
-        else Console.WriteLine("Меньше");
+        if (e.Result == ResultRound.Higher) Console.WriteLine("Больше");
+        if (e.Result == ResultRound.Lower) Console.WriteLine("Меньше");
     }
 }

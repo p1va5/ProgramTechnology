@@ -1,6 +1,7 @@
-﻿namespace GuessNumber.Output;
+﻿using GuessNumber.Logics;
+namespace GuessNumber.Output;
 
 public interface IOutput
 {
-    public void GetResult(ResultRound result);
+    public void GetResult(object? sender, RoundEvents e);
 }

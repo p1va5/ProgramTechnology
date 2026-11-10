@@ -13,7 +13,8 @@ namespace GuessNumber
         {
             IInput input = new InputConsole();
             IOutput output = new OutputConsole();
-            ILogic logic = new GameLogic(input, output);
+            ILogic logic = new GameLogic(input);
+            logic.RoundFinished += output.GetResult;
             ISecretNum secret = new RandomNubmer();
             IStatistic statistic = new ConsoleStatistic();
             IGame game = new Game(secret, logic, statistic, input, output);
