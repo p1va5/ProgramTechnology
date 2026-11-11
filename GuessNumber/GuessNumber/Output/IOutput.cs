@@ -3,5 +3,6 @@ namespace GuessNumber.Output;
 
 public interface IOutput
 {
-    public void GetResult(object? sender, RoundEvents e);
+    public void ShowResult(object? sender, RoundEvents e);
+    public void ShowStatistic(string text);
 }

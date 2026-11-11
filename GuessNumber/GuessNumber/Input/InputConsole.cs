@@ -17,7 +17,7 @@ public class InputConsole : IInput
             Console.WriteLine($"Выбери число [{min},{max}]");
             string input = Console.ReadLine();
 
-            if (int.TryParse(input, out userNumber) && userNumber >= min && userNumber <= 100)
+            if (int.TryParse(input, out userNumber) && userNumber >= min && userNumber <= max)
             {
                 return userNumber;
             }

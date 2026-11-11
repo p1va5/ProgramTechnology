@@ -1,7 +1,7 @@
 ﻿namespace GuessNumber.Statistics;
 internal interface IStatistic
 {
-    public void AddStatistic(int counter);
-    public void ShowStatistic();
+    public void Add(int counter);
+    public StatisticDto Get();
 
 }

@@ -1,4 +1,4 @@
-﻿namespace GuessNumber.Output;
+﻿namespace GuessNumber.Logics;
 public enum ResultRound
 {
     Correct,

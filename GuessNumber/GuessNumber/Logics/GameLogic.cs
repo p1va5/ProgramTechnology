@@ -1,5 +1,4 @@
 ﻿using GuessNumber.Input;
-using GuessNumber.Output;
 
 namespace GuessNumber.Logics;
 
@@ -7,7 +6,6 @@ public class GameLogic : ILogic
 {
     private readonly IInput _input;
     public event EventHandler<RoundEvents>? RoundFinished;
-    public event EventHandler<WinEvents>? GameWin;
 
     public GameLogic(IInput input)
     {
@@ -31,13 +29,9 @@ public class GameLogic : ILogic
         {
             countRound++;
             result = Round(secret);
-
-            RoundFinished?.Invoke(this, new RoundEvents(secret, result, countRound));
-
-
+            RoundFinished?.Invoke(this, new RoundEvents(result, countRound));
             if (result == ResultRound.Correct)
             {
-                GameWin?.Invoke(this, new WinEvents(secret, countRound));
                 return countRound;
             }
         }
