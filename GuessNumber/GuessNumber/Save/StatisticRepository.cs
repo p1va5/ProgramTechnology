@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace GuessNumber.Save;
 
-public class StatisticRepository : IRepository
+public class StatisticRepository : IRepositoryStatistic
 {
     private readonly string _path;
     public StatisticRepository(string path)

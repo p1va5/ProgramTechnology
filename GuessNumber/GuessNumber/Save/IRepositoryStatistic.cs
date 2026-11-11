@@ -2,7 +2,7 @@
 
 namespace GuessNumber.Save;
 
-public interface IRepository
+public interface IRepositoryStatistic
 {
     void Save(StatisticDto statistic);
     StatisticDto Load();
