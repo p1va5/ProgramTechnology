@@ -7,7 +7,7 @@ internal class Statistic : IStatistic
     private int _countGame = 0;
     public Statistic(StatisticDto statistic)
     {
-        _min = statistic.Min;
+        _min = statistic.CountGame == 0 ? int.MaxValue : statistic.Min;
         _max = statistic.Max;
         _count = statistic.Count;
         _countGame = statistic.CountGame;

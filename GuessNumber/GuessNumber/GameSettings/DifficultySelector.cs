@@ -2,29 +2,30 @@
 
 public class DifficultySelector : ISelector
 {
+    private readonly IReadOnlyList<DifficultyList> _options;
+
+    public DifficultySelector(IReadOnlyList<DifficultyList> options)
+    {
+        _options = options;
+    }
+
     public Setting Select()
     {
         Console.WriteLine("Выберите сложность:");
-        Console.WriteLine("1. Лёгкая (1–50)");
-        Console.WriteLine("2. Средняя (1–100)");
-        Console.WriteLine("3. Сложная (1–500)");
+        for (int i = 0; i < _options.Count; i++)
+        {
+            var option = _options[i];
+            Console.WriteLine($"{i + 1}. {option.Name} ({option.Min}–{option.Max})");
+        }
         while (true)
         {
             string input = Console.ReadLine();
-            if (int.TryParse(input, out int choice))
+            if (int.TryParse(input, out int choice) && choice >= 1 && choice <= _options.Count)
             {
-                switch (choice)
-                {
-                    case 1:
-                        return new Setting(Difficulty.Easy, 1, 50);
-                    case 2:
-                        return new Setting(Difficulty.Medium, 1, 100);
-                    case 3:
-                        return new Setting(Difficulty.Hard, 1, 500);
-                }
+                var option = _options[choice - 1];
+                return new Setting(option.Difficulty, option.Min, option.Max);
             }
             Console.WriteLine("Некорректный ввод");
         }
-
     }
 }

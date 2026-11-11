@@ -16,7 +16,13 @@ namespace GuessNumber
         {
             IInput input = new InputConsole();
             IOutput output = new OutputConsole();
-            DifficultySelector selector = new DifficultySelector();
+            IReadOnlyList<DifficultyList> options = new List<DifficultyList>
+            {
+                new(Difficulty.Easy, "Лёгкая", 1, 50),
+                new(Difficulty.Medium, "Средняя", 1, 100),
+                new(Difficulty.Hard, "Сложная", 1, 500)
+            };
+            DifficultySelector selector = new DifficultySelector(options);
             IRepositorySettings repositorySettings = new SettingsRepository("settings.json");
             IRepositoryStatistic statisticRepository = new StatisticRepository("statistic.json");
             Setting setting;
@@ -27,7 +33,7 @@ namespace GuessNumber
             logic.RoundFinished += output.ShowResult;
             ISecretNum secret = new RandomNubmer();
             IStatistic statistic = new Statistic(statisticRepository.Load());
-            IGame game = new Game(secret, logic, statistic, input, output, formatter, statisticRepository, repositorySettings, setting);
+            IGame game = new Game(secret, logic, statistic, input, output, formatter, statisticRepository, repositorySettings, setting, selector);
             game.Play();
         }
     }

@@ -1,4 +1,4 @@
 ﻿
 namespace GuessNumber.GameSettings;
 
-public sealed record Setting(Difficulty Difficulty,int Min, int Max);
+public sealed record Setting(Difficulty Difficulty, int Min, int Max);
