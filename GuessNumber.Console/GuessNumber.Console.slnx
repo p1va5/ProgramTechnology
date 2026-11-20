@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="../src/GuessNumber.Core/GuessNumber.Core.csproj" Id="e76927ad-fab2-4a18-ab48-6c6f679aa682" />
+  </Folder>
+  <Project Path="GuessNumber.Console.csproj" />
+</Solution>
