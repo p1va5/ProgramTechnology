@@ -1,4 +1,5 @@
-﻿using GuessNumber.Core.Game;
+﻿using GuessNumber.Console.SaveFile;
+using GuessNumber.Core.Game;
 using GuessNumber.Core.Player;
 using GuessNumber.Core.Secret;
 using GuessNumber.Core.Setting;
@@ -13,12 +14,14 @@ namespace GuessNumber.Console
         static void Main(string[] args)
         {
             ISecret secret = new RandomNumber();
-            var user = new Dictionary<string, User>();
+            IFile file = new FileStorage("users.json");
+            var user = file.LoadUsers();
             User curUser = SelectUser(user);
+            file.SaveUsers(user);
             while (true)
             {
                 System.Console.WriteLine("1. Играть");
-                System.Console.WriteLine("2. Cтатистика");
+                System.Console.WriteLine("2. Cтатистика");  
                 System.Console.WriteLine("3. Настройки");
                 System.Console.WriteLine("4. Выйти");
                 string? input = System.Console.ReadLine();
@@ -29,6 +32,7 @@ namespace GuessNumber.Console
                         case 1:
                             System.Console.Clear();
                             Play(secret, curUser.Settings, curUser.GetStatistic());
+                            file.SaveUsers(user);
                             System.Console.Clear();
                             break;
                         case 2:
@@ -38,9 +42,11 @@ namespace GuessNumber.Console
                         case 3:
                             System.Console.Clear();
                             curUser.Settings = ChoiceSettings();
+                            file.SaveUsers(user);
                             System.Console.Clear();
                             break;
                         case 4:
+                            file.SaveUsers(user);
                             return;
                     }
                 }

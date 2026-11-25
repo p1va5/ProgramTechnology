@@ -5,7 +5,7 @@ namespace GuessNumber.Core.Player;
 public class User
 {
     public string Name { get; }
-    private readonly Dictionary<string, IStatistic> _statistics = new();
+    public Dictionary<string, Statistic.Statistic> Statistics { get; set; } = new();
     public Settings Settings { get; set; } = Settings.Easy;
     public User(string name)
     {
@@ -14,10 +14,10 @@ public class User
     public IStatistic GetStatistic()
     {
         string level = Settings.Level;
-        if (!_statistics.TryGetValue(level, out var statistic))
+        if (!Statistics.TryGetValue(level, out var statistic))
         {
             statistic = new Statistic.Statistic(level);
-            _statistics.Add(level, statistic);
+            Statistics.Add(level, statistic);
         }
         return statistic;
     }

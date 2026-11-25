@@ -5,10 +5,10 @@ namespace GuessNumber.Core.Statistic;
 public class Statistic : IStatistic
 {
     public string Level { get; }
-    public int Min { get; private set; }
-    public int Max { get; private set; }
-    public int Count { get; private set; }
-    public  int CountGame { get; private set; }
+    public int Min { get; set; }
+    public int Max { get; set; }
+    public int Count { get; set; }
+    public  int CountGame { get; set; }
     public Statistic(string level)
     { 
         Level = level;
