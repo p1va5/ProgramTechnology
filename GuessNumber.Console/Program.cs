@@ -1,7 +1,10 @@
 ﻿using GuessNumber.Core.Game;
+using GuessNumber.Core.Player;
 using GuessNumber.Core.Secret;
 using GuessNumber.Core.Setting;
 using GuessNumber.Core.Statistic;
+using System.Xml.Linq;
+
 
 namespace GuessNumber.Console
 {
@@ -10,13 +13,8 @@ namespace GuessNumber.Console
         static void Main(string[] args)
         {
             ISecret secret = new RandomNumber();
-            Settings settings = Settings.Easy;
-            var statistics = new Dictionary<string, IStatistic>
-            {
-                [Settings.Easy.Level] = new Statistic(Settings.Easy.Level),
-                [Settings.Medium.Level] = new Statistic(Settings.Medium.Level),
-                [Settings.Hard.Level] = new Statistic(Settings.Hard.Level)
-            };
+            var user = new Dictionary<string, User>();
+            User curUser = SelectUser(user);
             while (true)
             {
                 System.Console.WriteLine("1. Играть");
@@ -30,16 +28,16 @@ namespace GuessNumber.Console
                     {
                         case 1:
                             System.Console.Clear();
-                            Play(secret, settings, statistics[settings.Level]);
+                            Play(secret, curUser.Settings, curUser.GetStatistic());
                             System.Console.Clear();
                             break;
                         case 2:
                             System.Console.Clear();
-                            ShowStatistic(statistics[settings.Level]);
+                            ShowStatistic(curUser.GetStatistic());
                             break;
                         case 3:
                             System.Console.Clear();
-                            settings = ChoiceSettings();
+                            curUser.Settings = ChoiceSettings();
                             System.Console.Clear();
                             break;
                         case 4:
@@ -85,13 +83,28 @@ namespace GuessNumber.Console
             }
             throw new ArgumentOutOfRangeException(nameof(level), level, "Неизвестный уровень сложности.");
         }
+        static User SelectUser(Dictionary<string, User> user)
+        {
+            while (true)
+            {
+                System.Console.WriteLine("Введите имя: ");
+                string? input = System.Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(input)) continue;
+                if (!user.TryGetValue(input, out var cur))
+                {
+                    cur = new User(input);
+                    user.Add(input, cur);
+                }
+                return cur;
+            }
+        }
         static void ShowStatistic(IStatistic statistic)
         {
             System.Console.WriteLine($"Уровень сложности: {RussianLevel(statistic.Level)}");
             System.Console.WriteLine($"Минимальное количество попыток: {statistic.Min}");
             System.Console.WriteLine($"Максимальное количество попыток: {statistic.Max}");
             if(statistic.CountGame == 0) System.Console.WriteLine($"AVG: 0");
-            System.Console.WriteLine($"AVG: {(double)statistic.Count / statistic.CountGame}");
+            else System.Console.WriteLine($"AVG: {(double)statistic.Count / statistic.CountGame}");
         }
         static Settings ChoiceSettings()
         {
