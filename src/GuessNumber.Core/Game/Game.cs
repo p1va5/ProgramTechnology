@@ -1,5 +1,6 @@
 ﻿using GuessNumber.Core.Secret;
 using GuessNumber.Core.Setting;
+using GuessNumber.Core.Statistic;
 
 namespace GuessNumber.Core.Game;
 
@@ -9,19 +10,24 @@ public class Game
     private readonly Settings _settings;
     private readonly int _number;
     public event EventHandler<RoundCheckEventArgs>? Check;
+    public event EventHandler<FinishGameEventArgs>? Finish;
     public Game(ISecret secret, Settings settings)
     { 
         _secret = secret;
         _settings = settings;
         _number = _secret.GetNumber(_settings.Min, _settings.Max);
     }
-    public bool Round(int input)
+    public bool Round(int input, int counter)
     {
         RoundResult result = RoundResult.Correct;
         if(_number < input) result = RoundResult.Lower;
         if (_number > input) result = RoundResult.High;
         Check?.Invoke(this, new RoundCheckEventArgs(result));
-        if(result == RoundResult.Correct) return true;
+        if (result == RoundResult.Correct)
+        {
+            Finish?.Invoke(this, new FinishGameEventArgs(_settings.Level, counter));
+            return true;
+        }
         return false;
     }
 }
